@@ -7,6 +7,14 @@ if vim.fn.has("nvim-0.8") == 0 then
   return
 end
 
+-- Neovim 0.9+ applies the server's semantic tokens automatically; link the
+-- rok ones (macro calls, user-defined literal suffixes) to sensible groups
+-- as a default, so they are coloured even when a colorscheme omits them.
+if vim.fn.has("nvim-0.9") == 1 then
+  vim.api.nvim_set_hl(0, "@lsp.type.macro.rok", { link = "Macro", default = true })
+  vim.api.nvim_set_hl(0, "@lsp.type.decorator.rok", { link = "PreProc", default = true })
+end
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "rok",
   group = vim.api.nvim_create_augroup("rok_lsp", { clear = true }),

@@ -3,7 +3,8 @@
 Syntax highlighting and filetype settings for `.rok` and `.rokon`, and —
 on Neovim — the rok language server (`rokls`) wired up with the built-in
 LSP client for completion, hover, go-to-definition, references, rename,
-symbols and formatting.
+symbols, formatting, and (Neovim 0.9+) semantic highlighting of macro
+calls and user-defined literal suffixes.
 
 ## Install
 
