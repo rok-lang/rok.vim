@@ -13,6 +13,8 @@ end
 if vim.fn.has("nvim-0.9") == 1 then
   vim.api.nvim_set_hl(0, "@lsp.type.macro.rok", { link = "Macro", default = true })
   vim.api.nvim_set_hl(0, "@lsp.type.decorator.rok", { link = "PreProc", default = true })
+  vim.api.nvim_set_hl(0, "@lsp.type.keyword.rok", { link = "Keyword", default = true })
+  vim.api.nvim_set_hl(0, "@lsp.type.operator.rok", { link = "Operator", default = true })
 end
 
 vim.api.nvim_create_autocmd("FileType", {
