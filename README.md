@@ -1,15 +1,12 @@
-# rok for Vim and Neovim
+# Rok for Vim and Neovim
 
-Syntax highlighting and filetype settings for `.rok` and `.rokon`, and, on
-Neovim, the rok language server (`rokls`) wired up with the built-in
-LSP client for completion, hover, go-to-definition, references, rename,
-symbols, formatting, and (Neovim 0.9+) semantic highlighting of user-defined macros, literal
-suffixes, keywords, operators, derives and attributes.
+Rok language support for Vim and Neovim: syntax highlighting and filetype
+settings for `.rok` and `.rokon`, plus (on Neovim) the rok language server
+`rokls` wired up through the built-in LSP client.
 
 ## Install
 
-Point your plugin manager at this repository, or copy its files onto your
-runtimepath.
+Point your plugin manager at this repository:
 
 ```vim
 " vim-plug
@@ -21,7 +18,7 @@ Plug 'rok-lang/rok.vim'
 { "rok-lang/rok.vim" }
 ```
 
-Or, without a manager:
+Or add it to your runtimepath directly:
 
 ```vim
 set runtimepath^=/path/to/rok.vim
@@ -29,12 +26,9 @@ set runtimepath^=/path/to/rok.vim
 
 ## Language server (Neovim)
 
-With the toolchain installed (so `rokls` is on your `PATH`;
-<https://rok-lang.org/download.html>), `plugin/rok.lua` starts the server
-for every rok buffer, no configuration needed. Then the usual LSP
-mappings work (`vim.lsp.buf.hover`, `definition`, `completion`, ...).
-
-Options:
+Install the toolchain so `rokls` is on your `PATH`
+(<https://rok-lang.org/download.html>); `plugin/rok.lua` then starts the
+server for every rok buffer automatically.
 
 ```lua
 vim.g.rok_lsp = 0                 -- turn the server off (highlighting stays)
@@ -43,7 +37,7 @@ vim.g.rok_server = "/path/rokls"  -- override the command (string or table)
 
 ### Classic Vim, coc.nvim, vim-lsp
 
-The server is any LSP over stdin/stdout, so point your client at `rokls`:
+`rokls` speaks LSP over stdin/stdout, so point any client at it:
 
 ```jsonc
 // coc-settings.json
