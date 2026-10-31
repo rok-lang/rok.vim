@@ -1,0 +1,57 @@
+#!/bin/sh
+# Writes the keyword lines of syntax/rok.vim and syntax/rokon.vim from
+# rok-syntax's grammars/keywords.rokon: the lines between the
+# `" BEGIN keywords` and `" END keywords` markers.
+#
+#   scripts/gen-syntax KEYWORDS.rokon [SYNTAX_DIR]
+set -eu
+
+root=$(cd "$(dirname "$0")/.." && pwd)
+keywords=$1
+dir=${2:-$root/syntax}
+
+# One `lang scope word..` line a tuple of keywords.rokon.
+tuples=$(sed -n 's/^ *( *"\([^"]*\)", *"\([^"]*\)", *\[\(.*\)\] *), *$/\1 \2 \3/p' "$keywords" | tr -d '",')
+[ -n "$tuples" ] || { echo "gen-syntax: no keyword lists in $keywords" >&2; exit 1; }
+
+# The Vim group of each class; classes without one are names or are
+# matched by syntax/*.vim itself (path roots, `pub(pkg)`).
+group() {
+	case "$1 $2" in
+	"rok keyword.control") echo rokKeyword ;;
+	"rok storage.type" | "rok storage.type.any") echo rokStorage ;;
+	"rok storage.modifier") echo rokModifier ;;
+	"rok keyword.other") echo rokOther ;;
+	"rok keyword.operator.word") echo rokOperatorWord ;;
+	"rok constant.language.boolean") echo rokBoolean ;;
+	"rok constant.language.none") echo rokNone ;;
+	"rok variable.language.self") echo rokSelf ;;
+	"rok support.type.primitive") echo rokType ;;
+	"rokon constant.language.boolean") echo rokonBoolean ;;
+	"rokon constant.language.none") echo rokonNone ;;
+	esac
+}
+
+lines() {
+	echo "$tuples" | while read -r lang scope words; do
+		[ "$lang" = "$1" ] || continue
+		g=$(group "$lang" "$scope")
+		[ -n "$g" ] || continue
+		echo "$words" | tr ' ' '\n' | awk -v g="$g" '
+			{ if (line != "" && length(line) + length($0) > 70) { print line; line = "" }
+			  line = line == "" ? "syn keyword " g " " $0 : line " " $0 }
+			END { if (line != "") print line }'
+	done
+}
+
+for lang in rok rokon; do
+	f=$dir/$lang.vim
+	lines "$lang" >"$f.kw"
+	awk -v kw="$f.kw" '
+		/^" BEGIN keywords/ { print; while ((getline l < kw) > 0) print l; skip = 1; next }
+		/^" END keywords/ { skip = 0 }
+		!skip' "$f" >"$f.new"
+	rm "$f.kw"
+	grep -q '^" BEGIN keywords' "$f.new" || { echo "gen-syntax: no BEGIN keywords marker in $f" >&2; rm "$f.new"; exit 1; }
+	mv "$f.new" "$f"
+done
