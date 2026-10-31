@@ -16,16 +16,19 @@ syn keyword rokType i8 i16 i32 i64 i128 isize u8 u16 u32 u64 u128 usize
 syn keyword rokType f32 f64 bool char str int float
 syn match   rokUserType "\<\u\w*\>"
 
-syn match   rokFunction "\<\h\w*\>\ze\s*(" 
-syn match   rokFuncDef "\<fn\>\s\+\zs\h\w*" 
+" r#name is an identifier, never a keyword; r#"..."# is a raw string.
+syn match   rokRawIdent "\<r#\h\w*"
+syn match   rokFunction "\<\%(r#\)\=\h\w*\>\ze\s*("
+syn match   rokFuncDef "\%(\<fn\s\+\)\@<=\%(r#\)\=\h\w*"
 
 syn match   rokNumber "\<0x[0-9a-fA-F_]\+\%((i\|u)\%(8\|16\|32\|64\|128\|size\)\)\=\>"
 syn match   rokNumber "\<0b[01_]\+\>"
 syn match   rokNumber "\<\d[0-9_]*\%(\.\d[0-9_]*\)\=\%([eE][+-]\=\d\+\)\=\%(\%(i\|u\)\%(8\|16\|32\|64\|128\|size\)\|f32\|f64\)\=\>"
 
-syn region  rokString start=+"+ skip=+\\"+ end=+"+ contains=rokEscape
+syn region  rokString start=+\%(\<b\)\="+ skip=+\\"+ end=+"+ contains=rokEscape
+syn region  rokRawString start=+\<r\z(#*\)"+ end=+"\z1+
 syn region  rokFString matchgroup=rokString start=+f"+ skip=+\\"+ end=+"+ contains=rokEscape,rokInterp
-syn region  rokInterp matchgroup=rokInterpDelim start=+{+ end=+}+ contained contains=rokNumber,rokBoolean,rokType,rokUserType,rokString
+syn region  rokInterp matchgroup=rokInterpDelim start=+{+ end=+}+ contained contains=rokNumber,rokBoolean,rokType,rokUserType,rokString,rokRawString,rokRawIdent
 syn match   rokEscape "\\." contained
 syn match   rokChar "'\%(\\.\|[^'\\]\)'"
 
@@ -46,6 +49,7 @@ hi def link rokFunction     Function
 hi def link rokFuncDef      Function
 hi def link rokNumber       Number
 hi def link rokString       String
+hi def link rokRawString    String
 hi def link rokFString      String
 hi def link rokInterpDelim  Special
 hi def link rokEscape       SpecialChar
