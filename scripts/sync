@@ -1,0 +1,65 @@
+#!/bin/sh
+# Copies the tree-sitter queries of rok-syntax into queries/ and writes
+# the keyword lines of syntax/ from its grammars/keywords.rokon.
+#
+#   scripts/sync                       fetch at the commit in rok-syntax.rev
+#   scripts/sync --from DIR            copy from a rok-syntax checkout, pin its HEAD
+#   scripts/sync --check [--from DIR]  fail if queries/ or syntax/ differ
+#
+# queries/ and the keyword lines are never edited by hand: change them
+# in rok-syntax, then sync.
+set -eu
+
+root=$(cd "$(dirname "$0")/.." && pwd)
+from=
+check=
+while [ $# -gt 0 ]; do
+	case $1 in
+	--from) from=$(cd "$2" && pwd); shift 2 ;;
+	--check) check=1; shift ;;
+	*) echo "usage: scripts/sync [--from DIR] [--check]" >&2; exit 2 ;;
+	esac
+done
+rev=$(cat "$root/rok-syntax.rev")
+queries="highlights locals injections folds indents"
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+get() {
+	if [ -n "$from" ]; then
+		cp "$from/$1" "$2"
+	else
+		curl -fsSL "https://raw.githubusercontent.com/rok-lang/rok-syntax/$rev/$1" -o "$2"
+	fi
+}
+
+for lang in rok rokon; do
+	mkdir -p "$tmp/queries/$lang"
+	for q in $queries; do
+		get "tree-sitter/$lang/queries/$q.scm" "$tmp/queries/$lang/$q.scm"
+	done
+done
+get grammars/keywords.rokon "$tmp/keywords.rokon"
+mkdir -p "$tmp/syntax"
+cp "$root/syntax/rok.vim" "$root/syntax/rokon.vim" "$tmp/syntax/"
+"$root/scripts/gen-syntax" "$tmp/keywords.rokon" "$tmp/syntax"
+
+if [ -n "$check" ]; then
+	status=0
+	diff -r "$tmp/queries" "$root/queries" >/dev/null || { echo "queries/ differs from rok-syntax; run scripts/sync"; status=1; }
+	for f in rok.vim rokon.vim; do
+		cmp -s "$tmp/syntax/$f" "$root/syntax/$f" || { echo "syntax/$f keywords differ from rok-syntax; run scripts/sync"; status=1; }
+	done
+	exit $status
+fi
+
+rm -rf "$root/queries"
+cp -R "$tmp/queries" "$root/queries"
+cp "$tmp/syntax/rok.vim" "$tmp/syntax/rokon.vim" "$root/syntax/"
+if [ -n "$from" ]; then
+	[ -z "$(git -C "$from" status --porcelain tree-sitter grammars)" ] ||
+		echo "warning: $from has uncommitted changes in tree-sitter/ or grammars/"
+	git -C "$from" rev-parse HEAD >"$root/rok-syntax.rev"
+	echo "rok-syntax.rev: $(cat "$root/rok-syntax.rev")"
+fi
