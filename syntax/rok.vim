@@ -20,6 +20,8 @@ syn match   rokUserType "\<\u\w*\>"
 syn match   rokRawIdent "\<r#\h\w*"
 syn match   rokFunction "\<\%(r#\)\=\h\w*\>\ze\s*("
 syn match   rokFuncDef "\%(\<fn\s\+\)\@<=\%(r#\)\=\h\w*"
+" name!(..), dep::name!(..), use dep::name!; but not try! or !=.
+syn match   rokMacro "\<\%(try!\)\@!\%(r#\)\=\h\w*!=\@!"
 
 syn match   rokNumber "\<0x[0-9a-fA-F_]\+\%((i\|u)\%(8\|16\|32\|64\|128\|size\)\)\=\>"
 syn match   rokNumber "\<0b[01_]\+\>"
@@ -28,7 +30,7 @@ syn match   rokNumber "\<\d[0-9_]*\%(\.\d[0-9_]*\)\=\%([eE][+-]\=\d\+\)\=\%(\%(i
 syn region  rokString start=+\%(\<b\)\="+ skip=+\\"+ end=+"+ contains=rokEscape
 syn region  rokRawString start=+\<r\z(#*\)"+ end=+"\z1+
 syn region  rokFString matchgroup=rokString start=+f"+ skip=+\\"+ end=+"+ contains=rokEscape,rokInterp
-syn region  rokInterp matchgroup=rokInterpDelim start=+{+ end=+}+ contained contains=rokNumber,rokBoolean,rokType,rokUserType,rokString,rokRawString,rokRawIdent
+syn region  rokInterp matchgroup=rokInterpDelim start=+{+ end=+}+ contained contains=rokNumber,rokBoolean,rokType,rokUserType,rokString,rokRawString,rokRawIdent,rokMacro
 syn match   rokEscape "\\." contained
 syn match   rokChar "'\%(\\.\|[^'\\]\)'"
 
@@ -47,6 +49,7 @@ hi def link rokType         Type
 hi def link rokUserType     Type
 hi def link rokFunction     Function
 hi def link rokFuncDef      Function
+hi def link rokMacro        Macro
 hi def link rokNumber       Number
 hi def link rokString       String
 hi def link rokRawString    String
