@@ -24,6 +24,7 @@ syn match   rokNumber "\<0b[01_]\+\>"
 syn match   rokNumber "\<\d[0-9_]*\%(\.\d[0-9_]*\)\=\%([eE][+-]\=\d\+\)\=\%(\%(i\|u\)\%(8\|16\|32\|64\|128\|size\)\|f32\|f64\)\=\>"
 
 syn region  rokString start=+"+ skip=+\\"+ end=+"+ contains=rokEscape
+syn region  rokRawString start=+\<r\z(#*\)"+ end=+"\z1+
 syn region  rokFString matchgroup=rokString start=+f"+ skip=+\\"+ end=+"+ contains=rokEscape,rokInterp
 syn region  rokInterp matchgroup=rokInterpDelim start=+{+ end=+}+ contained contains=rokNumber,rokBoolean,rokType,rokUserType,rokString
 syn match   rokEscape "\\." contained
@@ -46,6 +47,7 @@ hi def link rokFunction     Function
 hi def link rokFuncDef      Function
 hi def link rokNumber       Number
 hi def link rokString       String
+hi def link rokRawString    String
 hi def link rokFString      String
 hi def link rokInterpDelim  Special
 hi def link rokEscape       SpecialChar
