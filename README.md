@@ -35,6 +35,11 @@ vim.g.rok_lsp = 0                 -- turn the server off (highlighting stays)
 vim.g.rok_server = "/path/rokls"  -- override the command (string or table)
 ```
 
+The server gives hover (`K`), go to definition, completion (`<C-x><C-o>`),
+signature help (`<C-s>` in insert mode), rename (`grn`) and quick fixes
+(`gra`), including `rok add` for a missing stone. The keys are Neovim 0.11's
+defaults.
+
 ### Classic Vim, coc.nvim, vim-lsp
 
 `rokls` speaks LSP over stdin/stdout, so point any client at it:
