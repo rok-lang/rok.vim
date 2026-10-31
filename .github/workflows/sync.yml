@@ -1,0 +1,16 @@
+# queries/ and the keyword lines of syntax/ must match rok-syntax at the
+# commit in rok-syntax.rev.
+name: sync
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: scripts/sync --check
