@@ -21,7 +21,7 @@ group() {
 	"rok keyword.control") echo rokKeyword ;;
 	"rok storage.type" | "rok storage.type.any") echo rokStorage ;;
 	"rok storage.modifier") echo rokModifier ;;
-	"rok keyword.other") echo rokOther ;;
+	"rok keyword.other" | "rok keyword.other.reserved") echo rokOther ;;
 	"rok keyword.operator.word") echo rokOperatorWord ;;
 	"rok constant.language.boolean") echo rokBoolean ;;
 	"rok constant.language.none") echo rokNone ;;

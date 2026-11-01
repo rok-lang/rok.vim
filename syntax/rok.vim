@@ -17,6 +17,7 @@ syn keyword rokNone none
 syn keyword rokSelf self Self
 syn keyword rokType i8 i16 i32 i64 i128 isize u8 u16 u32 u64 u128 usize
 syn keyword rokType f32 f64 bool char str int float c_char
+syn keyword rokOther macro defer dyn move gen do
 " END keywords
 
 " pkg, sup and rok only before ::; pkg and sub only in pub( ).
@@ -24,6 +25,9 @@ syn match   rokPathRoot "\<\%(pkg\|sup\|rok\)\ze::"
 syn match   rokModifier "\%(\<pub\s*(\s*\)\@<=\%(pkg\|sub\)\>"
 
 syn match   rokUserType "\<\u\w*\>"
+
+" return@each: the label names the closure's callee.
+syn match   rokLabel "\%(\<return\)\@<=@\h\w*"
 
 " r#name is an identifier, never a keyword; r#"..."# is a raw string.
 syn match   rokRawIdent "\<r#\h\w*"
@@ -57,6 +61,7 @@ hi def link rokModifier     StorageClass
 hi def link rokOther        Keyword
 hi def link rokOperatorWord Operator
 hi def link rokPathRoot     Include
+hi def link rokLabel        Label
 hi def link rokBoolean      Boolean
 hi def link rokNone         Constant
 hi def link rokSelf         Identifier
