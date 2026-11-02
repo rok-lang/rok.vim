@@ -4,8 +4,8 @@
 
 (identifier) @variable
 
-; A capitalized word is a type (docs/token-classes.md, rule 10). Latin,
-; Greek and Cyrillic capitals: Neovim's regex has no \p{Lu}.
+; A capitalized word is a type. Latin, Greek and Cyrillic
+; capitals only: Neovim's regex has no \p{Lu}.
 ((identifier) @type
   (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
 
@@ -133,8 +133,8 @@
 
 "await" @keyword.coroutine
 
-; Reserved for later syntax (spec 1.5.6). They parse as names; outside
-; the name positions, which have their own nodes, they are keywords.
+; Reserved keywords. They parse as names; outside the name
+; positions, which have their own nodes, they are keywords.
 [
   "macro"
   "defer"
@@ -146,6 +146,9 @@
 
 ((identifier) @keyword
   (#match? @keyword "^(macro|defer|dyn|move|gen|do)$"))
+
+(capture_list
+  "move" @keyword.modifier)
 
 (closure_modifiers) @keyword.modifier
 
@@ -309,8 +312,7 @@
 
 (field_identifier) @property
 
-; `true` `false` `none` `self` `Self` stay keywords before `:`
-; (docs/token-classes.md, rule 3).
+; `true` `false` `none` `self` `Self` stay keywords before `:`.
 ((field_identifier) @boolean
   (#match? @boolean "^(true|false)$"))
 
@@ -433,8 +435,7 @@
   (token_tree
     "("))
 
-; A reserved keyword before `(` or `!` is still the keyword
-; (docs/token-classes.md, rule 7).
+; A reserved keyword before `(` or `!` is still the keyword.
 ((call_expression
   function: (identifier) @keyword)
   (#match? @keyword "^(macro|defer|dyn|move|gen|do)$"))
