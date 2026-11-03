@@ -1,15 +1,12 @@
 -- Neovim: start rokls for rok buffers with the built-in LSP client.
--- Put this repo on the runtimepath (any plugin manager, or
--- `set rtp+=/path/to/rok.vim`). No extra plugin is needed.
+-- Needs only this repo on the runtimepath.
 --   vim.g.rok_lsp = 0           -- turn the server off (highlighting stays)
 --   vim.g.rok_server = "rokls"  -- or a full path / { "rokls", "--flag" }
 if vim.fn.has("nvim-0.8") == 0 then
   return
 end
 
--- Neovim 0.9+ applies the server's semantic tokens automatically; link the
--- rok ones (macro calls, user-defined literal suffixes) to sensible groups
--- as a default, so they are coloured even when a colorscheme omits them.
+-- Default links for rok semantic tokens, for colorschemes that lack them.
 if vim.fn.has("nvim-0.9") == 1 then
   vim.api.nvim_set_hl(0, "@lsp.type.macro.rok", { link = "Macro", default = true })
   vim.api.nvim_set_hl(0, "@lsp.type.decorator.rok", { link = "PreProc", default = true })
