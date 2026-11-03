@@ -1,4 +1,4 @@
-" Simple brace-based indent for rok.
+" Simple brace-based indent for ROKON.
 if exists("b:did_indent")
   finish
 endif

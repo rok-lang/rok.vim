@@ -1,6 +1,6 @@
 -- Neovim: start rokls for rok buffers with the built-in LSP client.
 -- Put this repo on the runtimepath (any plugin manager, or
--- `set rtp+=/path/to/editors/vim`). No extra plugin is needed.
+-- `set rtp+=/path/to/rok.vim`). No extra plugin is needed.
 --   vim.g.rok_lsp = 0           -- turn the server off (highlighting stays)
 --   vim.g.rok_server = "rokls"  -- or a full path / { "rokls", "--flag" }
 if vim.fn.has("nvim-0.8") == 0 then
