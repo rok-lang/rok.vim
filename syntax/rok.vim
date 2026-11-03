@@ -26,6 +26,10 @@ syn match   rokModifier "\%(\<pub\s*(\s*\)\@<=\%(pkg\|sub\)\>"
 
 syn match   rokUserType "\<\u\w*\>"
 
+" x !in xs: one word operator. some only before a bound after : or ->.
+syn match   rokOperatorWord "!in\>"
+syn match   rokStorage "\%(\%(->\|[^:]:\)\s*\)\@<=\<some\ze\s\+[(A-Za-z_]"
+
 " return@each: the label names the closure's callee.
 syn match   rokLabel "\%(\<return\)\@<=@\h\w*"
 
@@ -48,7 +52,7 @@ syn region  rokRawString start=+\<r\z(#*\)"+ end=+"\z1+
 syn region  rokFString matchgroup=rokString start=+f"+ skip=+\\"+ end=+"+ contains=rokEscape,rokInterp
 syn region  rokInterp matchgroup=rokInterpDelim start=+{+ end=+}+ contained contains=rokNumber,rokBoolean,rokNone,rokType,rokUserType,rokString,rokRawString,rokRawIdent,rokMacro
 syn match   rokEscape "\\." contained
-syn match   rokChar "'\%(\\.\|[^'\\]\)'"
+syn match   rokChar "\%(\<[bc]\)\='\%(\\.\|[^'\\]\)'"
 
 syn match   rokComment "//.*$" contains=rokTodo
 syn region  rokComment start="/\*" end="\*/" contains=rokTodo
