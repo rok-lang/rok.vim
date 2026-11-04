@@ -57,7 +57,8 @@ ROKON's values.
 
 ## Language server (Neovim)
 
-Install the toolchain so `rokls` is on your `PATH`
+Install the toolchain (Rok 0.2 or later; 0.1 is no longer supported) so
+`rokls` is on your `PATH`
 (<https://rok-lang.org/download.html>); `plugin/rok.lua` then starts the
 server for every rok buffer automatically.
 
