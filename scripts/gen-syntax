@@ -10,7 +10,7 @@ root=$(cd "$(dirname "$0")/.." && pwd)
 keywords=$1
 dir=${2:-$root/syntax}
 
-# One `lang scope word..` line a tuple of keywords.rokon.
+# One `lang scope word..` line per keywords.rokon tuple.
 tuples=$(sed -n 's/^ *( *"\([^"]*\)", *"\([^"]*\)", *\[\(.*\)\] *), *$/\1 \2 \3/p' "$keywords" | tr -d '",')
 [ -n "$tuples" ] || { echo "gen-syntax: no keyword lists in $keywords" >&2; exit 1; }
 
@@ -21,7 +21,7 @@ group() {
 	"rok keyword.control") echo rokKeyword ;;
 	"rok storage.type" | "rok storage.type.any") echo rokStorage ;;
 	"rok storage.modifier") echo rokModifier ;;
-	"rok keyword.other") echo rokOther ;;
+	"rok keyword.other" | "rok keyword.other.reserved") echo rokOther ;;
 	"rok keyword.operator.word") echo rokOperatorWord ;;
 	"rok constant.language.boolean") echo rokBoolean ;;
 	"rok constant.language.none") echo rokNone ;;
